@@ -1,0 +1,62 @@
+{
+    "manifest_version": 3,
+    "name": "简历快填助手",
+    "version": "1.2.0",
+    "description": "上传简历，一键在招聘网站自动填写表单。",
+    "action": {
+        "default_icon": "assets/icon48.png",
+        "default_popup": "popup.html",
+        "default_title": "简历快填助手"
+    },
+    "options_ui": {
+        "page": "options.html",
+        "open_in_tab": true
+    },
+    "background": {
+        "service_worker": "background.js",
+        "type": "module"
+    },
+    "icons": {
+        "16": "assets/icon16.png",
+        "48": "assets/icon48.png",
+        "128": "assets/icon128.png"
+    },
+    "permissions": [
+        "storage",
+        "activeTab",
+        "scripting",
+        "contextMenus",
+        "tabs",
+        "alarms"
+    ],
+    "host_permissions": [
+        "http://*/*",
+        "https://*/*"
+    ],
+    "content_scripts": [
+        {
+            "matches": [
+                "http://*/*",
+                "https://*/*"
+            ],
+            "js": [
+                "phoenix-select-filler.js",
+                "content-script.js"
+            ],
+            "css": [
+                "ui/floating-button.css"
+            ],
+            "run_at": "document_idle"
+        }
+    ],
+    "web_accessible_resources": [
+        {
+            "resources": [
+                "ui/*"
+            ],
+            "matches": [
+                "<all_urls>"
+            ]
+        }
+    ]
+}

@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>欢迎使用简历快填助手</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+      min-height: 100vh;
+      color: #e2e8f0;
+      padding: 40px 20px;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .logo {
+      font-size: 64px;
+      margin-bottom: 16px;
+      animation: bounce 2s ease-in-out infinite;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    .title {
+      font-size: 28px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #a78bfa, #6c63ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 8px;
+    }
+    .subtitle {
+      font-size: 16px;
+      color: #94a3b8;
+    }
+    .card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 20px;
+      backdrop-filter: blur(10px);
+    }
+    .card-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #a78bfa;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .card-content {
+      font-size: 14px;
+      line-height: 1.8;
+      color: #cbd5e1;
+    }
+    .card-content ul {
+      list-style: none;
+      padding-left: 0;
+    }
+    .card-content li {
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .card-content li:last-child {
+      border-bottom: none;
+    }
+    .card-content li::before {
+      content: '✓ ';
+      color: #22c55e;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 14px 28px;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #6c63ff, #a78bfa);
+      color: #fff;
+      box-shadow: 0 4px 20px rgba(108,99,255,0.4);
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 30px rgba(108,99,255,0.6);
+    }
+    .btn-secondary {
+      background: rgba(255,255,255,0.1);
+      color: #e2e8f0;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    .btn-secondary:hover {
+      background: rgba(255,255,255,0.2);
+    }
+    .btn-group {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+    .highlight {
+      color: #22c55e;
+      font-weight: 600;
+    }
+    .warning {
+      color: #f59e0b;
+    }
+    .footer {
+      text-align: center;
+      margin-top: 40px;
+      color: #64748b;
+      font-size: 12px;
+    }
+    .step {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 16px 0;
+    }
+    .step-num {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, #6c63ff, #a78bfa);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+    .step-content h4 {
+      font-size: 15px;
+      margin-bottom: 4px;
+    }
+    .step-content p {
+      font-size: 13px;
+      color: #94a3b8;
+    }
+    #uploadSection {
+      border: 2px dashed rgba(167,139,250,0.5);
+      transition: all 0.3s;
+    }
+    #uploadSection:hover {
+      border-color: rgba(167,139,250,0.8);
+      background: rgba(167,139,250,0.05);
+    }
+    #uploadSection.highlight-section {
+      border-color: #22c55e;
+      box-shadow: 0 0 30px rgba(34,197,94,0.3);
+      animation: pulse-border 1.5s ease-in-out infinite;
+    }
+    @keyframes pulse-border {
+      0%, 100% { box-shadow: 0 0 30px rgba(34,197,94,0.3); }
+      50% { box-shadow: 0 0 50px rgba(34,197,94,0.5); }
+    }
+    .upload-area {
+      text-align: center;
+      padding: 20px;
+    }
+    .upload-area input[type="file"] {
+      display: none;
+    }
+    .upload-icon {
+      font-size: 48px;
+      margin-bottom: 12px;
+    }
+    .upload-text {
+      font-size: 14px;
+      color: #94a3b8;
+      margin-bottom: 16px;
+    }
+    .upload-hint {
+      font-size: 12px;
+      color: #64748b;
+      margin-top: 12px;
+    }
+    #parseStatus {
+      margin-top: 16px;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 14px;
+      display: none;
+    }
+    #parseStatus.success {
+      display: block;
+      background: rgba(34,197,94,0.1);
+      border: 1px solid rgba(34,197,94,0.3);
+      color: #22c55e;
+    }
+    #parseStatus.error {
+      display: block;
+      background: rgba(239,68,68,0.1);
+      border: 1px solid rgba(239,68,68,0.3);
+      color: #ef4444;
+    }
+    #parseStatus.loading {
+      display: block;
+      background: rgba(167,139,250,0.1);
+      border: 1px solid rgba(167,139,250,0.3);
+      color: #a78bfa;
+    }
+    .privacy-notice {
+      background: rgba(34,197,94,0.1);
+      border: 1px solid rgba(34,197,94,0.3);
+      border-radius: 12px;
+      padding: 16px;
+      margin-top: 16px;
+      display: none;
+    }
+    .privacy-notice.show {
+      display: block;
+      animation: fadeIn 0.5s ease-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .privacy-notice-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #22c55e;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .privacy-notice-content {
+      font-size: 13px;
+      color: #94a3b8;
+      line-height: 1.6;
+    }
+    .privacy-notice-content ul {
+      margin-top: 8px;
+      padding-left: 0;
+    }
+    .privacy-notice-content li {
+      padding: 4px 0;
+      border-bottom: none;
+      font-size: 12px;
+    }
+    .privacy-notice-content li::before {
+      content: '🔒 ';
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="logo">⚡</div>
+      <h1 class="title">欢迎使用简历快填助手</h1>
+      <p class="subtitle">让求职投递变得简单高效</p>
+    </div>
+
+    <div class="card" id="uploadSection">
+      <div class="card-title">📤 上传简历</div>
+      <div class="upload-area">
+        <div class="upload-icon">📄</div>
+        <div class="upload-text">点击下方按钮选择简历文件</div>
+        <label for="fileInput" class="btn btn-primary" style="cursor:pointer;">
+          选择简历文件
+        </label>
+        <input type="file" id="fileInput" accept=".pdf,.doc,.docx,.png,.jpg,.jpeg">
+        <div class="upload-hint">支持 PDF、Word、图片格式，最大 20MB</div>
+        <div id="parseStatus"></div>
+      </div>
+      <div class="privacy-notice" id="privacyNotice">
+        <div class="privacy-notice-title">🔒 您的数据安全</div>
+        <div class="privacy-notice-content">
+          <p>您的简历数据已安全保存在本地浏览器中，我们高度重视您的隐私：</p>
+          <ul>
+            <li>简历数据仅存储在您的浏览器本地，不会上传到任何服务器</li>
+            <li>AI解析服务仅用于提取简历信息，不保留任何原始文件</li>
+            <li>您可以随时在插件中清除所有数据</li>
+            <li>我们不会收集、分享或出售您的任何个人信息</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🎁 专属福利</div>
+      <div class="card-content">
+        <p style="margin-bottom: 16px;">感谢您的支持！为您准备了 <span class="highlight">150份精选简历模板</span></p>
+        <a href="https://pan.baidu.com/s/1whsMyNJdO-uCq1TCGcPwBw?pwd=abcd" target="_blank" class="btn btn-primary">
+          📥 下载简历模板
+        </a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📖 如何使用</div>
+      <div class="card-content">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h4>上传简历</h4>
+            <p>点击上方按钮，上传简历文件（支持PDF、Word、图片）</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h4>AI解析</h4>
+            <p>系统自动解析简历内容，提取关键信息</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h4>一键填写</h4>
+            <p>打开招聘网站，点击悬浮按钮自动填写表单</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🔄 如何更新</div>
+      <div class="card-content">
+        <ul>
+          <li>插件会自动检测新版本，图标显示<span class="warning">红点</span>时有更新</li>
+          <li>点击弹窗中的"立即更新"按钮下载新版本</li>
+          <li>将下载的CRX文件拖入 chrome://extensions/ 页面覆盖安装</li>
+          <li>建议加入用户群，第一时间获取更新通知</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">💬 联系支持</div>
+      <div class="card-content">
+        <p>如有问题或建议，欢迎联系：</p>
+        <div class="btn-group">
+          <a href="#" class="btn btn-secondary" id="btnJoinGroup">👥 加入用户群</a>
+          <a href="mailto:support@example.com" class="btn btn-secondary">📧 邮件联系</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <p>简历快填助手 v1.2.0 | © 2025</p>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+  <script>
+    const IS_DEBUG = false;
+    const BACKEND = IS_DEBUG ? "http://127.0.0.1:8200" : "http://62.234.168.105:8200";
+    
+    function sendMsg(msg) {
+      return new Promise((resolve, reject) => {
+        chrome.runtime.sendMessage(msg, resp => {
+          if (chrome.runtime.lastError) return reject(chrome.runtime.lastError);
+          resolve(resp);
+        });
+      });
+    }
+
+    function setStatus(el, msg, type) {
+      el.textContent = msg;
+      el.className = type;
+    }
+
+    document.getElementById('btnJoinGroup').addEventListener('click', (e) => {
+      e.preventDefault();
+      alert('请添加微信: xxxxx 备注"简历助手"');
+    });
+
+    const fileInput = document.getElementById('fileInput');
+    const parseStatus = document.getElementById('parseStatus');
+    const privacyNotice = document.getElementById('privacyNotice');
+    const uploadSection = document.getElementById('uploadSection');
+
+    fileInput.addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      // 用户选择文件时就显示隐私提示
+      privacyNotice.classList.add('show');
+
+      if (file.size > 20 * 1024 * 1024) {
+        setStatus(parseStatus, '文件过大，请选择小于 20MB 的文件', 'error');
+        return;
+      }
+
+      setStatus(parseStatus, '正在解析简历，请稍候...', 'loading');
+
+      try {
+        let parsed = null;
+        
+        try {
+          const form = new FormData();
+          form.append('file', file);
+          const ctrl = new AbortController();
+          const tid = setTimeout(() => ctrl.abort(), 90000);
+          const resp = await fetch(`${BACKEND}/parse-resume`, {
+            method: 'POST',
+            body: form,
+            signal: ctrl.signal
+          });
+          clearTimeout(tid);
+          if (!resp.ok) {
+            const errText = await resp.text().catch(() => '');
+            throw new Error(`HTTP ${resp.status}: ${errText.slice(0, 200)}`);
+          }
+          parsed = await resp.json();
+        } catch (backendErr) {
+          const arrayBuffer = await file.arrayBuffer();
+          const uint8 = new Uint8Array(arrayBuffer);
+          let binary = '';
+          const chunkSize = 8192;
+          for (let i = 0; i < uint8.length; i += chunkSize) {
+            binary += String.fromCharCode.apply(null, uint8.subarray(i, i + chunkSize));
+          }
+          const fileData = btoa(binary);
+          const resp2 = await sendMsg({ type: 'PARSE_RESUME', fileName: file.name, fileData });
+          if (!resp2 || !resp2.ok) throw new Error(resp2?.error || '解析失败');
+          parsed = resp2.data;
+        }
+
+        if (!parsed) throw new Error('解析结果为空');
+
+        await sendMsg({ type: 'SET_STATE', patch: { resumeData: parsed } });
+        await sendMsg({ type: 'INCREMENT_USAGE' });
+
+        setStatus(parseStatus, '✓ 解析成功！简历已保存到本地', 'success');
+        
+      } catch (err) {
+        console.error(err);
+        setStatus(parseStatus, '解析失败：' + err.message, 'error');
+      }
+    });
+
+    chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+      if (message.action === 'scrollToUpload') {
+        uploadSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        uploadSection.classList.add('highlight-section');
+        setTimeout(() => {
+          uploadSection.classList.remove('highlight-section');
+        }, 3000);
+      }
+    });
+  </script>
+</body>
+</html>

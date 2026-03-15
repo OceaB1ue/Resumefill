@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <title>简历快填助手</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <div id="app">
+      <!-- Header -->
+      <header class="header">
+        <div class="header-left">
+          <span class="logo-icon">🍓</span>
+          <span class="logo-text">简历快填</span>
+        </div>
+        <div id="statusBadge" class="badge badge-free">免费版</div>
+      </header>
+
+      <!-- Update Banner -->
+      <div id="updateBanner" class="update-banner" style="display:none;">
+        <div class="update-banner-content">
+          <span class="update-icon">🎉</span>
+          <span class="update-text">发现新版本 <span id="newVersion"></span></span>
+        </div>
+        <button class="update-btn" id="btnUpdate">立即更新</button>
+        <button class="update-dismiss" id="btnDismissUpdate">×</button>
+      </div>
+
+      <!-- Tab Nav -->
+      <nav class="tab-nav">
+        <button class="tab-btn active" data-tab="resume">简历</button>
+        <button class="tab-btn" data-tab="settings">设置</button>
+        <button class="tab-btn" data-tab="activate">激活</button>
+      </nav>
+
+      <!-- Tab: 简历 -->
+      <div class="tab-pane active" id="tab-resume">
+        <div class="card">
+          <div class="card-title">上传简历</div>
+          <label class="file-drop" id="fileDrop">
+            <input type="file" id="resumeFile" accept=".pdf,.doc,.docx" />
+            <span class="file-drop-icon">📄</span>
+            <span class="file-drop-text" id="fileDropText">点击选择 PDF / DOCX 文件</span>
+          </label>
+          <button class="btn btn-primary" id="btnParse">上传并解析</button>
+          <div id="parseStatus" class="hint"></div>
+          <div id="privacyNotice" class="privacy-notice" style="display:none;">
+            <div class="privacy-notice-title">🔒 您的数据安全</div>
+            <div class="privacy-notice-content">
+              <ul>
+                <li>简历数据仅存储在本地浏览器</li>
+                <li>AI解析不保留任何原始文件</li>
+                <li>我们不会收集您的个人信息</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">简历数据预览 / 编辑</div>
+          <div id="resumeEditor" class="resume-editor">
+            <div class="resume-placeholder">解析结果将显示在这里...</div>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-secondary" id="btnSaveJson">保存</button>
+            <button class="btn btn-ghost" id="btnResetJson">恢复原始</button>
+            <button class="btn btn-primary" id="btnFillCurrent">立即填写</button>
+          </div>
+        </div>
+
+        <div class="card gift-card">
+          <div class="card-title">🎁 精选简历模板</div>
+          <p class="gift-text">150款精选简历模板免费下载</p>
+          <a href="https://pan.baidu.com/s/1whsMyNJdO-uCq1TCGcPwBw?pwd=abcd" target="_blank" class="btn btn-gift">
+            <span>📥 立即下载</span>
+            <span class="gift-badge">提取码: abcd</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Tab: 设置 -->
+      <div class="tab-pane" id="tab-settings">
+        <div class="card">
+          <div class="card-title">悬浮按钮显示模式</div>
+          <div class="radio-group">
+            <label class="radio-item">
+              <input type="radio" name="floatMode" value="smart" />
+              <span>智能（仅招聘网站）</span>
+            </label>
+            <label class="radio-item">
+              <input type="radio" name="floatMode" value="always" />
+              <span>常驻（所有页面）</span>
+            </label>
+            <label class="radio-item">
+              <input type="radio" name="floatMode" value="hidden" />
+              <span>隐藏</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">数据管理</div>
+          <button class="btn btn-danger" id="btnClearMemory">清空所有本地数据</button>
+          <div class="hint" style="margin-top:6px">包括简历数据和记忆值</div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">关于</div>
+          <div class="about-links">
+            <a id="linkOfficial" href="#" target="_blank" rel="noreferrer">官方网站</a>
+            <span class="sep">·</span>
+            <a id="linkPrivacy" href="#" target="_blank" rel="noreferrer">隐私政策</a>
+          </div>
+          <div class="version-text">v1.2.0</div>
+        </div>
+      </div>
+
+      <!-- Tab: 激活 -->
+      <div class="tab-pane" id="tab-activate">
+        <div class="card">
+          <div class="card-title">免费额度</div>
+          <div class="usage-display">
+            <div class="usage-dots" id="usageDots">
+              <span class="dot dot-used"></span>
+              <span class="dot dot-used"></span>
+              <span class="dot dot-used"></span>
+            </div>
+            <div class="usage-label" id="usageLabel">剩余 3 次免费机会</div>
+          </div>
+        </div>
+
+        <div class="card" id="activateCard">
+          <div class="card-title">激活码解锁无限次</div>
+          <div class="activate-notice">
+            <p>💡 <strong>关于收费</strong></p>
+            <p>本工具需要调用AI进行简历解析，每次解析都会产生API费用。收费是为了维持服务器运营和API调用成本，感谢您的理解与支持！</p>
+          </div>
+          <input type="text" id="activationCode" placeholder="输入 16 位激活码" maxlength="20" />
+          <button class="btn btn-primary" id="btnActivate">激活</button>
+          <div id="activationStatus" class="hint"></div>
+          <a class="buy-link" id="linkBuy" href="#" target="_blank" rel="noreferrer">前往购买激活码 →</a>
+        </div>
+
+        <div class="card share-card">
+          <div class="card-title">🎁 分享赚次数</div>
+          <p class="share-desc">在抖音、小红书、B站等平台分享本工具，审核通过即可获得 <strong>3次</strong> 使用机会！</p>
+          <div class="share-tips">
+            <p>📱 分享内容建议：</p>
+            <ul>
+              <li>展示工具的使用效果</li>
+              <li id="shareTipMaibao">说明在面包多搜索"简历快填"可下载</li>
+              <li>分享你的使用体验</li>
+            </ul>
+          </div>
+          <div class="share-form">
+            <select id="sharePlatform" class="share-select">
+              <option value="">选择分享平台</option>
+              <option value="抖音">🎵 抖音</option>
+              <option value="小红书">📕 小红书</option>
+              <option value="B站">📺 B站</option>
+              <option value="微博">🔴 微博</option>
+              <option value="朋友圈">💚 朋友圈</option>
+              <option value="其他">🌐 其他</option>
+            </select>
+            <input type="text" id="shareUrl" placeholder="粘贴作品链接（如：https://...）" />
+            <textarea id="shareDesc" placeholder="补充说明（可选）：如作品标题、简介等" rows="2"></textarea>
+            <button class="btn btn-primary" id="btnSubmitShare">提交审核</button>
+          </div>
+          <div id="shareStatus" class="hint"></div>
+          <div id="shareHistory" class="share-history"></div>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="popup.js"></script>
+  </body>
+</html>

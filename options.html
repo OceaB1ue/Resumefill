@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <title>简历快填助手 - 设置</title>
+    <link rel="stylesheet" href="popup.css" />
+    <style>
+      body { width: 520px; }
+      .options-section { padding: 20px; }
+      .options-title { font-size: 20px; font-weight: 700; margin-bottom: 4px;
+        background: linear-gradient(135deg, #a78bfa, #6c63ff);
+        -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+      .options-sub { font-size: 12px; color: var(--text-muted); margin-bottom: 20px; }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <header class="header">
+        <div class="header-left">
+          <span class="logo-icon">🍓</span>
+          <span class="logo-text">简历快填助手</span>
+        </div>
+        <div class="badge badge-free">设置</div>
+      </header>
+      <div class="options-section">
+        <div class="options-title">高级设置</div>
+        <div class="options-sub">更多设置选项将在后续版本中添加</div>
+        <div class="card">
+          <div class="card-title">服务状态</div>
+          <div id="serverStatus" class="hint">检查中...</div>
+          <button class="btn btn-secondary" id="btnCheckServer" style="width:fit-content">检查连接</button>
+        </div>
+        <div class="card" style="margin-top:10px">
+          <div class="card-title">关于</div>
+          <div class="version-text">简历快填助手 v1.2.0</div>
+          <div class="version-text" style="margin-top:4px">后端服务：草莓.top</div>
+          <div class="about-links" style="margin-top:8px">
+            <a id="linkOfficial" href="#" target="_blank" rel="noreferrer">官方网站</a>
+            <span class="sep">·</span>
+            <a id="linkPrivacy" href="#" target="_blank" rel="noreferrer">隐私政策</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="module">
+      import { apiClient } from './api.js';
+      const statusEl = document.getElementById('serverStatus');
+      const btnCheck = document.getElementById('btnCheckServer');
+      
+      async function checkServer() {
+        statusEl.textContent = '检查中...';
+        statusEl.className = 'hint';
+        try {
+          await apiClient.healthCheck();
+          statusEl.textContent = '✓ 服务正常';
+          statusEl.className = 'hint success';
+        } catch(e) {
+          statusEl.textContent = '✗ 无法连接：' + e.message;
+          statusEl.className = 'hint error';
+        }
+      }
+      
+      async function loadConfig() {
+        try {
+          const IS_DEBUG = false;
+          const BACKEND = IS_DEBUG ? "http://127.0.0.1:8200" : "http://62.234.168.105:8200";
+          const resp = await fetch(`${BACKEND}/api/version`);
+          if (!resp.ok) return;
+          const config = await resp.json();
+          
+          const linkOfficial = document.getElementById('linkOfficial');
+          const linkPrivacy = document.getElementById('linkPrivacy');
+          
+          if (linkOfficial && config.official_website) {
+            linkOfficial.href = config.official_website;
+          }
+          if (linkPrivacy && config.privacy_url) {
+            linkPrivacy.href = config.privacy_url;
+          }
+        } catch(e) {
+          console.warn('[options] 加载配置失败:', e);
+        }
+      }
+      
+      btnCheck.addEventListener('click', checkServer);
+      checkServer();
+      loadConfig();
+    </script>
+  </body>
+</html>
